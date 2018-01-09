@@ -96,6 +96,7 @@ def login():
                 app.logger.info('Password did not match')
         else: # Username does not exits in the database
             app.logger.info('User does not exist')
+        return render_template('login.html')
 
 if __name__ == '__main__':
     app.secret_key = 'Secret123'

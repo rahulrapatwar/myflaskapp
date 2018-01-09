@@ -39,5 +39,13 @@ class RegisterForm(Form):
     ])
     confirm = PasswordField('Confirm Password')
 
+# Register page
+@app.route('/register', methods=['GET','POST'])
+def register(request):
+    form = RegisterForm(request.form)
+    if request.method == 'POST' and form.validate():
+        pass
+    return render_template('register.html',form = form)
+
 if __name__ == '__main__':
     app.run(debug=True)

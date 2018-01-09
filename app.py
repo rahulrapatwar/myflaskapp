@@ -17,7 +17,7 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor' # Returns in the form of dictiona
 # Init MySQL
 mysql = MySQL(app)
 
-Articles = Articles()
+# Articles = Articles()
 
 # Home page view
 @app.route('/')
@@ -32,7 +32,19 @@ def about():
 # Articles page
 @app.route('/articles')
 def articles():
-    return render_template('articles.html',articles = Articles)
+    # Create cursor
+    cur = mysql.connection.cursor()
+    # Get articles
+    result = cur.execute("SELECT * FROM articles")
+    articles = cur.fetchall()
+
+    if result > 0: # If articles exists
+        return render_template('articles.html', articles = articles)
+    else:
+        msg = "No Articles Found"
+        return render_template('articles.html', msg=msg)
+    # Close connection
+    cur.close()
 
 # Article detail page
 @app.route('/article/<string:id>')

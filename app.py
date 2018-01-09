@@ -56,7 +56,6 @@ def article(id):
     if result > 0:
         article = cur.fetchone()
 
-
     return render_template('article.html',article=article)
 
 # Register form class
@@ -188,6 +187,38 @@ def add_article():
         flash("Article created",'success')
         return redirect(url_for('dashboard'))
     return render_template('add_article.html',form=form)
+
+# Edit Article
+@app.route('/edit_article/<string:id>', methods=['GET','POST'])
+@is_logged_in
+def edit_article(id):
+    # Create cursor
+    cur = mysql.connection.cursor()
+    # Get article by id
+    result = cur.execute("SELECT * FROM articles WHERE id=%s",[id])
+    article = cur.fetchone()
+    # Get form
+    form = ArticleForm(request.form)
+    # Populate the form
+    form.title.data = article['title']
+    form.body.data = article['body']
+
+    form = ArticleForm(request.form)
+    if request.method == 'POST' and form.validate():
+        title = request.form['title']
+        body = request.form['body']
+        # Create cursor
+        cur = mysql.connection.cursor()
+        # Executing the query
+        cur.execute("UPDATE articles SET title=%s, body=%s WHERE id=%s", (title,body,id))
+        # Commit to database
+        mysql.connection.commit()
+        # Close connection
+        cur.close()
+        # Success flash
+        flash("Article Updated",'success')
+        return redirect(url_for('dashboard'))
+    return render_template('edit_article.html',form=form)
 
 
 if __name__ == '__main__':

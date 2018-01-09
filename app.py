@@ -54,7 +54,21 @@ class RegisterForm(Form):
 def register():
     form = RegisterForm(request.form)
     if request.method == 'POST' and form.validate():
-        pass
+        # Fetching data from the form
+        name = form.name.data
+        email = form.email.data
+        username = form.username.data
+        password = sha256_crypt.encrypt(str(form.password.data)) # Encrypting the password before storing to the database
+
+        # Create cursor
+        cur = mysql.connection.cursor()
+        # Executing the query
+        cur.execute("INSERT INTO users(name,email,username,password) VALUES(%s,%s,%s,%s)", (name,email,username,password))
+        # Commit to database
+        mysql.connection.commit()
+        # Close connection
+        cur.close()
+        return redirect('index')
     return render_template('register.html',form = form)
 
 if __name__ == '__main__':

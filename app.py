@@ -93,9 +93,11 @@ def login():
             if sha256_crypt.verify(password_user,password): # If both passwords match
                 app.logger.info('Password matched')
             else:
-                app.logger.info('Password did not match')
+                error = "Invalid login"
+                return render_template('login.html',error=error)
         else: # Username does not exits in the database
-            app.logger.info('User does not exist')
+            error = "User does not exist"
+            return render_template('login.html',error=error)
         return render_template('login.html')
 
 if __name__ == '__main__':

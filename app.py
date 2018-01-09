@@ -203,7 +203,6 @@ def edit_article(id):
     form.title.data = article['title']
     form.body.data = article['body']
 
-    form = ArticleForm(request.form)
     if request.method == 'POST' and form.validate():
         title = request.form['title']
         body = request.form['body']

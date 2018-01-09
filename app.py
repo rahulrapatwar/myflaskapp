@@ -76,7 +76,7 @@ def register():
 # Login page
 @app.route('/login',methods=['GET','POST'])
 def login():
-    if request.method == 'POST':
+    if request.method == 'POST': # POST request
         # Get data from the form
         username = request.form['username']
         password_user = request.form['password']
@@ -91,14 +91,25 @@ def login():
             password = data['password'] # data is in the dictionary format and fetching the password
             # Compare passwords
             if sha256_crypt.verify(password_user,password): # If both passwords match
-                app.logger.info('Password matched')
+                # Create session
+                session['logged_in'] = True
+                session['username'] = username
+
+                flash("You are now logged in",'success')
+                return redirect(url_for('dashboard'))
             else:
                 error = "Invalid login"
                 return render_template('login.html',error=error)
         else: # Username does not exits in the database
             error = "User does not exist"
             return render_template('login.html',error=error)
-        return render_template('login.html')
+    # GET request
+    return render_template('login.html')
+
+# Dashboard page
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
 
 if __name__ == '__main__':
     app.secret_key = 'Secret123'

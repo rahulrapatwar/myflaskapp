@@ -74,4 +74,5 @@ def register():
     return render_template('register.html',form = form)
 
 if __name__ == '__main__':
+    app.secret_key = 'Secret123'
     app.run(debug=True)

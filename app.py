@@ -68,7 +68,9 @@ def register():
         mysql.connection.commit()
         # Close connection
         cur.close()
-        return redirect('index')
+        # Success flash
+        flash('You are successfully registered and you can now login','success')
+        return redirect(url_for('index'))
     return render_template('register.html',form = form)
 
 if __name__ == '__main__':

@@ -49,7 +49,15 @@ def articles():
 # Article detail page
 @app.route('/article/<string:id>')
 def article(id):
-    return render_template('article.html',id=id)
+    # Create cursor
+    cur = mysql.connection.cursor()
+    # Query for username entered
+    result = cur.execute("SELECT * FROM articles WHERE id=%s",[id])
+    if result > 0:
+        article = cur.fetchone()
+
+
+    return render_template('article.html',article=article)
 
 # Register form class
 class RegisterForm(Form):
